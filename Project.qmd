@@ -39,7 +39,7 @@ not, as well as between ICU and step–down unit patients.
 #| label: read_data
 
 library(tidyverse)
-
+load("REE.RData")
 
 ```
 
