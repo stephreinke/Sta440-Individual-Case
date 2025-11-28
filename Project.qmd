@@ -1,0 +1,46 @@
+---
+title: "Post Surgery Resting Engery Expenditure - STA440 Final Project"
+author: "Steph Reinke"
+date: "December 2025"
+format: 
+  pdf:
+    documentclass: article
+    geometry: margin=1in
+execute: 
+  warning: false
+  message: false
+  echo: false
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+# 1. Background
+Surgery patients often face complex recovery processes, and
+understanding their metabolic needs is critical for optimizing care
+through targeted feeding. Indirect calorimetry (IC) is a standard method
+for measuring energy expenditure via respiration (Rattanachaiwong and
+Singer, 2019). Resting energy expenditure (REE), measured via IC, plays
+a key role in guiding nutritional support, which can improve patient
+outcomes post–operation. However, there are significant gaps in the
+literature regarding REE in recovering cardiac surgery patients. The
+goal of the present study was to measure REE and REE/kg in these
+patients during their stays in the intensive care unit (ICU) and
+subsequently in the step–down unit (SDU), so that this information can
+be used to improve post–surgery care. A total of 11 patients (4 obese, 7
+non–obese) were included in the study, with 35 indirect REE measurements
+taken throughout their recoveries to capture different stages of
+metabolic demand. These measurements were collected repeatedly, allowing
+for comparison between patients on ventilators versus those who were
+not, as well as between ICU and step–down unit patients.
+
+# 2. Data
+```{r}
+#| label: read_data
+
+library(tidyverse)
+
+
+```
+
+# 3. EDA
