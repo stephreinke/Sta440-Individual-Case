@@ -22,6 +22,8 @@ The recovery processes for surgery patients are often complex. Through understan
 Characterize the relationship between resting energy expenditure and obesity status, ventilator status and patient location (ICU vs SDU). Are your conclusions the same when REE is weight adjusted (REEperKG)?
 
 # 2. Data
+REE was measured using indirect calorimetry within 72 hours of surgery and then every five to seven days throughout hospitalization. REE and REEperKG are the outcomes variables, REEperKG is REE adjusted for weight. Obese and ventilator are indicator variables for their respective factors. BMI is the patient's body mass index. Measurement is the measurement number for that observation. ICUorSDU tells if the patient was in the intesive care unit or the stepdown unit.
+
 ```{r}
 #| label: read_data
 
@@ -31,3 +33,75 @@ load("REE.RData")
 ```
 
 # 3. EDA
+In order to gain an understanding of the data exploratory data analysis was conducted. 
+
+```{r}
+plot1 <- REE |>
+  ggplot(aes(x = REE, y = BMI, color = ICUorSDU)) +
+  geom_point(alpha = .7,
+             size = 2) +
+  theme_minimal() +
+  labs(title = "REE vs BMI by Hosptial Unit",
+       color = "Hospital Unit")
+
+plot2 <- REE |>
+  ggplot(aes(y = REEperKG, fill = as.factor(Obese))) +
+  geom_boxplot() +
+  facet_grid(~Obese) +
+  theme_minimal() +
+  labs(title = "Distrbution of REE per KG by Obesity Status",
+       y = "REE per KG",
+       fill = "Obese") +
+  theme(axis.text.x = element_blank())
+
+plot3 <- REE |>
+  ggplot(aes(y = REE, fill = as.factor(Measurement))) +
+  geom_boxplot() +
+  facet_grid(~as.factor(Measurement)) +
+  theme_minimal() +
+  labs(fill = "Measurement",
+       title = "Distribution of REE by Measurement Number") +
+  theme(axis.text.x = element_blank())
+
+ plot2.5 <- REE |>
+  ggplot(aes(y = REE, fill = as.factor(Obese))) +
+  geom_boxplot() +
+  facet_grid(~as.factor(Obese)) +
+  theme_minimal() +
+  labs(fill = "Measurement",
+       title = "Distribution of REE by Measurement Number") +
+  theme(axis.text.x = element_blank())
+ 
+plot4 <- REE |>
+  ggplot(aes(y = REE, fill = as.factor(Ventilator))) +
+  geom_boxplot() +
+  facet_grid(~Ventilator) +
+  theme_minimal() +
+  labs(title = "Distribution of REE by Ventilator Status",
+       fill = "Ventilator") +
+  theme(axis.text.x = element_blank())
+```
+
+# 6. Appendix
+```{r}
+#| fig-cap: Roughly linear between BMI and REE, more ICU at lower REEs
+plot1
+```
+```{r}
+#| fig-cap: Non obese patients have larger range of REE per KG with higher median than obese patients
+plot2
+```
+```{r}
+#| fig-cap: Non obese patients have smaller median REE with lower IQR than obese patients
+plot2.5
+```
+
+```{r}
+#| fig-cap: Median REE is consistent, but range varies drastically over time
+plot3
+```
+
+```{r}
+#| fig-cap: Higher REE for patients not on ventilator, but similar ranges
+plot4
+```
