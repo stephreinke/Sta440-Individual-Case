@@ -97,6 +97,89 @@ plot1.5 <- REE |>
        x = "REE", y = "REE per KG", color = "Obese")
 ```
 
+# 4. Modeling
+We will take a frequentist apporach
+
+```{r}
+library(lme4)
+
+fit_REE <- lmer(
+  REE ~ Obese + Ventilator + ICUorSDU + (1 | ID),
+  data = REE
+)
+summary(fit_REE)
+
+fit_REEkg <- lmer(
+  REEperKG ~ Obese + Ventilator + ICUorSDU + (1 | ID),
+  data = REE
+)
+summary(fit_REEkg)
+```
+
+```{r}
+library(pbkrtest)
+print("Test for Obese")
+fit_no_obese <- lmer(
+  REE ~ Ventilator + ICUorSDU + (1 | ID),
+  data = REE
+)
+KRmodcomp(fit_REE, fit_no_obese)
+
+print("Test for Ventilator")
+fit_no_vent <- lmer(
+  REE ~ Obese + ICUorSDU + (1 | ID),
+  data = REE
+)
+KRmodcomp(fit_REE, fit_no_vent)
+
+print("Test for ICUorSDU")
+fit_no_icu <- lmer(
+  REE ~ Ventilator + Obese + (1 | ID),
+  data = REE
+)
+KRmodcomp(fit_REE, fit_no_icu)
+```
+
+```{r}
+library(pbkrtest)
+print("Test for Obese")
+fit_no_obesekg <- lmer(
+  REEperKG ~ Ventilator + ICUorSDU + (1 | ID),
+  data = REE
+)
+KRmodcomp(fit_REEkg, fit_no_obesekg)
+
+print("Test for Ventilator")
+fit_no_ventkg <- lmer(
+  REEperKG ~ Obese + ICUorSDU + (1 | ID),
+  data = REE
+)
+KRmodcomp(fit_REEkg, fit_no_ventkg)
+
+print("Test for ICUorSDU")
+fit_no_icukg <- lmer(
+  REEperKG ~ Ventilator + Obese + (1 | ID),
+  data = REE
+)
+KRmodcomp(fit_REEkg, fit_no_icukg)
+```
+
+```{r}
+plot(fitted(fit_REE), resid(fit_REE))
+abline(h = 0, col = "red", lwd = 2, lty = 2)
+qqnorm(resid(fit_REE)); qqline(resid(fit_REE))
+ranef(fit_REE)
+qqnorm(ranef(fit_REE)$ID[,1])
+```
+
+```{r}
+plot(fitted(fit_REEkg), resid(fit_REEkg))
+abline(h = 0, col = "red", lwd = 2, lty = 2)
+qqnorm(resid(fit_REEkg)); qqline(resid(fit_REEkg))
+ranef(fit_REEkg)
+qqnorm(ranef(fit_REEkg)$ID[,1])
+```
+
 # 6. Appendix
 ```{r}
 #| fig-cap: Roughly linear between BMI and REE, more ICU at lower REEs
