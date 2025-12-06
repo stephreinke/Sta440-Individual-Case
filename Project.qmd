@@ -164,22 +164,6 @@ fit_no_icukg <- lmer(
 KRmodcomp(fit_REEkg, fit_no_icukg)
 ```
 
-```{r}
-plot(fitted(fit_REE), resid(fit_REE))
-abline(h = 0, col = "red", lwd = 2, lty = 2)
-qqnorm(resid(fit_REE)); qqline(resid(fit_REE))
-ranef(fit_REE)
-qqnorm(ranef(fit_REE)$ID[,1])
-```
-
-```{r}
-plot(fitted(fit_REEkg), resid(fit_REEkg))
-abline(h = 0, col = "red", lwd = 2, lty = 2)
-qqnorm(resid(fit_REEkg)); qqline(resid(fit_REEkg))
-ranef(fit_REEkg)
-qqnorm(ranef(fit_REEkg)$ID[,1])
-```
-
 # 6. Appendix
 ```{r}
 #| fig-cap: Roughly linear between BMI and REE, more ICU at lower REEs
@@ -210,4 +194,36 @@ plot4
 ```{r}
 #| fig-cap: No clear trends by patient overtime
 plot5
+```
+
+```{r}
+#| fig-cap: Residual plot for REE model shows okay scatter but coning shaped variance
+plot(fitted(fit_REE), resid(fit_REE))
+abline(h = 0, col = "red", lwd = 2, lty = 2)
+```
+
+```{r}
+#| fig-cap: QQ plot for REE model shows slight devation from diagnol at center and tails
+qqnorm(resid(fit_REE)); qqline(resid(fit_REE))
+```
+
+```{r}
+#| fig-cap: QQ plot by patient for REE model shows deviation from normality
+qqnorm(ranef(fit_REE)$ID[,1])
+```
+
+```{r}
+#| fig-cap: Residual plot for REE KG model shows okay scatter but denser at lower fitted values
+plot(fitted(fit_REEkg), resid(fit_REEkg))
+abline(h = 0, col = "red", lwd = 2, lty = 2)
+```
+
+```{r}
+#| fig-cap: QQ plot for REE KG model shows slight devation from diagnol at tails
+qqnorm(resid(fit_REEkg)); qqline(resid(fit_REEkg))
+```
+
+```{r}
+#| fig-cap: QQ plot by patient for REE KG model shows deviation from normality
+qqnorm(ranef(fit_REEkg)$ID[,1])
 ```
