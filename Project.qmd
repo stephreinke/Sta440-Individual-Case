@@ -80,12 +80,31 @@ plot4 <- REE |>
   labs(title = "Distribution of REE by Ventilator Status",
        fill = "Ventilator") +
   theme(axis.text.x = element_blank())
+
+plot5 <- REE |>
+  ggplot(aes(x = Measurement, y = REE, group = ID, color = factor(ID))) +
+  geom_line(alpha = .6) +
+  geom_point() +
+  theme_minimal() +
+  labs(title = "Individual Patient REE Trajectories",
+       x = "Measurement Number", color = "Patient ID")
+plot1.5 <- REE |>
+  ggplot(aes(x = REE, y = REEperKG, color = factor(Obese))) +
+  geom_point(size = 2, alpha = 0.8) +
+  geom_smooth(method = "lm", se = FALSE) +
+  theme_minimal() +
+  labs(title = "Relationship Between REE and REE per KG",
+       x = "REE", y = "REE per KG", color = "Obese")
 ```
 
 # 6. Appendix
 ```{r}
 #| fig-cap: Roughly linear between BMI and REE, more ICU at lower REEs
 plot1
+```
+```{r}
+#| fig-cap: REE per KG is lower for higher REEs and obese patients
+plot1.5
 ```
 ```{r}
 #| fig-cap: Non obese patients have larger range of REE per KG with higher median than obese patients
@@ -104,4 +123,8 @@ plot3
 ```{r}
 #| fig-cap: Higher REE for patients not on ventilator, but similar ranges
 plot4
+```
+```{r}
+#| fig-cap: No clear trends by patient overtime
+plot5
 ```
