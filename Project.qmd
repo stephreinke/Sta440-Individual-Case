@@ -28,6 +28,8 @@ REE was measured using indirect calorimetry within 72 hours of surgery and then 
 #| label: read_data
 
 library(tidyverse)
+library(knitr)
+library(broom.mixed)
 load("REE.RData")
 
 ```
@@ -118,51 +120,48 @@ summary(fit_REEkg)
 
 ```{r}
 library(pbkrtest)
-print("Test for Obese")
 fit_no_obese <- lmer(
   REE ~ Ventilator + ICUorSDU + (1 | ID),
   data = REE
 )
-KRmodcomp(fit_REE, fit_no_obese)
 
-print("Test for Ventilator")
 fit_no_vent <- lmer(
   REE ~ Obese + ICUorSDU + (1 | ID),
   data = REE
 )
-KRmodcomp(fit_REE, fit_no_vent)
 
-print("Test for ICUorSDU")
 fit_no_icu <- lmer(
   REE ~ Ventilator + Obese + (1 | ID),
   data = REE
 )
-KRmodcomp(fit_REE, fit_no_icu)
+
+test_obese <- tidy(KRmodcomp(fit_REE, fit_no_obese))
+test_vent <- tidy(KRmodcomp(fit_REE, fit_no_vent))
+test_ICU <- tidy(KRmodcomp(fit_REE, fit_no_icu))
 ```
 
 ```{r}
-library(pbkrtest)
-print("Test for Obese")
 fit_no_obesekg <- lmer(
   REEperKG ~ Ventilator + ICUorSDU + (1 | ID),
   data = REE
 )
-KRmodcomp(fit_REEkg, fit_no_obesekg)
 
-print("Test for Ventilator")
 fit_no_ventkg <- lmer(
   REEperKG ~ Obese + ICUorSDU + (1 | ID),
   data = REE
 )
-KRmodcomp(fit_REEkg, fit_no_ventkg)
 
-print("Test for ICUorSDU")
 fit_no_icukg <- lmer(
   REEperKG ~ Ventilator + Obese + (1 | ID),
   data = REE
 )
-KRmodcomp(fit_REEkg, fit_no_icukg)
+
+test_obesekg <- tidy(KRmodcomp(fit_REEperKG, fit_no_obesekg))
+test_ventkg <- tidy(KRmodcomp(fit_REEperKG, fit_no_ventkg))
+test_ICUkg <- tidy(KRmodcomp(fit_REEperKG, fit_no_icukg))
 ```
+
+# 5. Conclusions
 
 # 6. Appendix
 ```{r}
@@ -226,4 +225,23 @@ qqnorm(resid(fit_REEkg)); qqline(resid(fit_REEkg))
 ```{r}
 #| fig-cap: QQ plot by patient for REE KG model shows deviation from normality
 qqnorm(ranef(fit_REEkg)$ID[,1])
+```
+
+```{r}
+results <- bind_rows(
+  mutate(test_obese, predictor = "Obese"),
+  mutate(test_vent, predictor = "Ventilator"),
+  mutate(test_ICU,  predictor = "ICUorSDU")
+)
+
+knitr::kable(results, digits = 4, caption = "Kenward–Roger Tests for Fixed Effects for REE Model")
+```
+```{r}
+results <- bind_rows(
+  mutate(test_obesekg, predictor = "Obese"),
+  mutate(test_ventkg, predictor = "Ventilator"),
+  mutate(test_ICUkg,  predictor = "ICUorSDU")
+)
+
+knitr::kable(results, digits = 4, caption = "Kenward–Roger Tests for Fixed Effects for REE per KG Model")
 ```
